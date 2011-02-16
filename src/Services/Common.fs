@@ -302,16 +302,6 @@ module Common =
           for file in ref.GetReferencedFileNames(configSelector) do
             yield file ]
     
-    // If 'FSharp.Core.dll' is not in the set of references, we need to 
-    // resolve it and add it (this can be removed when assembly resolution in the
-    // langauge service is fixed on Mono, because LS will try to do this)
-    let coreRef = files |> List.exists (fun fn -> fn.EndsWith("FSharp.Core.dll") )
-    if not coreRef then
-      let dirs = ScriptOptions.getDefaultDirectories None []
-      match ScriptOptions.resolveAssembly dirs "FSharp.Core" with
-      | Some fn -> yield "-r:" + wrapf(fn)
-      | None -> Debug.tracef "Resolution" "FSharp.Core assembly resolution failed!"
-      
     for file in files do 
       yield "-r:" + wrapf(file) }
 
